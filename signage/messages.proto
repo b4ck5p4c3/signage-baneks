@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package protocol;
+
+enum Position {
+    LEFT = 0;
+    CENTER = 1;
+    RIGHT = 2;
+}
+
+enum Direction {
+    LEFT_TO_RIGHT = 0;
+    RIGHT_TO_LEFT = 1;
+}
+
+message StaticEffect {
+    Position position = 1; 
+}
+
+message ScrollEffect {
+    Direction direction = 1;
+    uint32 speed = 2;
+}
+
+message FlashEffect {
+    Position position = 1;
+    uint32 delay = 2;
+}
+
+enum EffectType {
+    STATIC = 0;
+    SCROLL = 1;
+    FLASH = 2;
+    RAW_BUFFER = 3;
+}
+
+message Message {
+    bytes data = 1;
+    uint32 brightness = 2;
+    EffectType effect_type = 3;
+    oneof effect {
+        StaticEffect static_effect = 11;
+        ScrollEffect scroll_effect = 12;
+        FlashEffect flash_effect = 13;
+    }
+}
+
+message SetBackgroundMessagePacket {
+    Message message = 1;
+}
+
+message SetMessagePacket {
+    Message message = 1;
+    uint32 priority = 2;
+    uint32 duration = 3;
+}
